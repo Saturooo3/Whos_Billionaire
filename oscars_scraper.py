@@ -41,6 +41,7 @@ def parse_golden_globe_table(table):
 
     # Skip table's first row (titles) by slicing, as its only the headers.
     for row in rows[1:]:
+        # Potentially get the year from a <th>
         year_cell = row.find("th")
         if year_cell:
             year_text = year_cell.get_text(strip=True)
@@ -48,10 +49,11 @@ def parse_golden_globe_table(table):
             if year_text.isdigit():
                 current_year = year_text
                 if current_year not in data:
-                    data[current_year] = {
-                        "winner": "",
-                        "nominees": []
-                    }
+                    # data[current_year] = {
+                    #     "winner": "",
+                    #     "nominees": []
+                    # }
+                    data[current_year] = ""
 
         cells = row.find_all("td")
         if not cells:
@@ -77,8 +79,9 @@ def parse_golden_globe_table(table):
                     break
 
         if current_year:
-            data[current_year]["nominees"].append(film_title)
+            # data[current_year]["nominees"].append(film_title)
             if is_winner:
-                data[current_year]["winner"] = film_title
+                # data[current_year]["winner"] = film_title
+                data[current_year] = film_title
 
     return data

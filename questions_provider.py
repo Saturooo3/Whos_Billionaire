@@ -28,7 +28,7 @@ def create_list_for_answer_options(capital_of_country_dict, asked_questions) -> 
     return [rand_key, value_of_rand_key, wrong_value_list]
 
 
-def create_dict_for_answer_options(capital_of_country_dict, asked_questions) -> list:
+def create_dict_for_answer_options(capital_of_country_dict, asked_questions, jokers) -> list:
     """
     takes a dict of capital cities and returns a dict of 4 capital cities
     """
@@ -37,8 +37,12 @@ def create_dict_for_answer_options(capital_of_country_dict, asked_questions) -> 
     answer_options_values: list = wrong_value_list.copy()
     answer_options_values.append(value_of_rand_key)
     random.shuffle(answer_options_values)
-    answer_options_values.append("SKIP")
-    keys: list = ["A", "B", "C", "D", "E"]
+    keys: list = ["A", "B", "C", "D"]
+
+    if jokers > 0:
+        answer_options_values.append("SKIP")
+        keys.append("E")
+
     for key, value in zip(keys, answer_options_values):
         answer_options[key] = value
     return [rand_key, value_of_rand_key, answer_options]
