@@ -1,10 +1,10 @@
 import wikipedia
 from bs4 import BeautifulSoup
+import re
 
 def get_golden_globe_winners():
     elements = wikipedia.page("Golden_Globe_Award_for_Best_Motion_Picture_–_Drama")
     soup = BeautifulSoup(elements.html(), "html.parser")
-
     # Only grab movies from the last three decates
     decades = ["2000s", "2010s", "2020s"]
 
@@ -39,20 +39,15 @@ def parse_golden_globe_table(table):
     data = {}
     current_year = None
 
-    # Skip table's first row (titles) by slicing, as its only the headers.
     for row in rows[1:]:
-        # Potentially get the year from a <th>
         year_cell = row.find("th")
         if year_cell:
             year_text = year_cell.get_text(strip=True)
-            # If there's a digit year, start a new 'current_year'
-            if year_text.isdigit():
-                current_year = year_text
+            # Use regex to find the first four-digit number in the year cell text
+            year_match = re.search(r'\d{4}', year_text)
+            if year_match:
+                current_year = year_match.group()
                 if current_year not in data:
-                    # data[current_year] = {
-                    #     "winner": "",
-                    #     "nominees": []
-                    # }
                     data[current_year] = ""
 
         cells = row.find_all("td")
@@ -60,28 +55,17 @@ def parse_golden_globe_table(table):
             continue
 
         film_title = cells[0].get_text(strip=True)
+        style = row.get("style", "").lower()
+        is_winner = "background:#b0c4de" in style
 
-        # Find out if this row is a winner
-        style = row.get("style", "")
-        is_winner = False
-
-        # Find out the winner by checking background:#B0C4DE
-        # Either the whole row or the td
-        # Lowercase the style as freaking wikipedia does what it wants and uses different cases
-        style_lower = style.lower()
-        if "background:#b0c4de" in style_lower:
-            is_winner = True
-        else:
+        if not is_winner:
             for c in cells:
                 cell_style = (c.get("style") or "").lower()
                 if "background:#b0c4de" in cell_style:
                     is_winner = True
                     break
 
-        if current_year:
-            # data[current_year]["nominees"].append(film_title)
-            if is_winner:
-                # data[current_year]["winner"] = film_title
-                data[current_year] = film_title
+        if current_year and is_winner:
+            data[current_year] = film_title
 
     return data

@@ -1,7 +1,6 @@
 import wikipedia
 from bs4 import BeautifulSoup
 
-
 def get_list_of_capitals_and_countries():
     article = wikipedia.page("List_of_national_capitals#List")
     soup = BeautifulSoup(article.html(), "html.parser")
@@ -24,7 +23,7 @@ def get_list_of_capitals_and_countries():
 
         # Extract the city from the first cell:
         city_td = cells[0]
-        city_text = city_td.get_text(strip=True)  # strip whitespace from the beginning and end
+        city_text = city_td.get_text(strip=True) # strip whitespace from the beginning and end
 
         # Extract country. Might be reused if it spanned over several cities.
         if remaining_country_rowspan == 0 and len(cells) > 1:

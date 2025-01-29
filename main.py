@@ -8,11 +8,14 @@ import graphics
 import random
 from colorama import Fore, Style
 from multiprocessing import Process, Manager
-
+import os
+import sys
 
 NUMBER_OF_JOKERS = 2
 REQUIRED_CORRECT_ANSWERS = 10
 
+def clear_screen():
+    os.system('clear')
 
 def generate_capitals_dict(shared_dict):
     shared_dict["capitals"] = get_list_of_capitals_and_countries()
@@ -27,6 +30,10 @@ def generate_oscars_dict(shared_dict):
 
 
 def loading_lists():
+    # Open a file descriptor to null
+    devnull = os.open(os.devnull, os.O_WRONLY)
+    # Redirect stderr to null
+    os.dup2(devnull, 2)
     print("#####################################")
     print("Loading list.")
     print("Please wait...")
@@ -75,13 +82,15 @@ def show_winner_screen(jokers, price, player_name):
     leaderboard.display_leaderboard()
 
 def main():
+    print("\n\n")
     graphics.game_splash()
     jokers = NUMBER_OF_JOKERS
     price = 0
     rounds_played = 0
     game_ended = False
     player_name = str(input("Please add your name: ").strip())
-    print(Fore.LIGHTYELLOW_EX + f"\nWelcome to the game, {player_name}!\n\nLet's start!\n" + Style.RESET_ALL)
+    clear_screen()
+    print(Fore.LIGHTYELLOW_EX + f"\n\n\nWelcome to the game, {player_name}!\n\nLet's start!\n" + Style.RESET_ALL)
 
     list_of_dicts = loading_lists()
     capitals_dict, elements_dict, oscars_dict = list_of_dicts
@@ -89,10 +98,12 @@ def main():
     asked_questions = []
 
     while rounds_played <= REQUIRED_CORRECT_ANSWERS and not game_ended:
+        clear_screen()
         rand_dict = random.choice(list_of_dicts)
         rand_key, value_of_rand_key, answer_options = questions_provider.create_dict_for_answer_options(
             rand_dict, asked_questions, jokers)
 
+        print("\n\n")
         print(graphics.display_hangman(rounds_played))
 
         choose_correct_dict(rand_key, capitals_dict, elements_dict, oscars_dict)
@@ -110,7 +121,7 @@ def main():
                 jokers, price, rounds_played, game_ended = check_answer.check_answer(answer_options[user_choice],
                                                                              value_of_rand_key, jokers, price,
                                                                              rounds_played, game_ended, player_name)
-                asked_questions.append(rand_dict[rand_key])
+                asked_questions.append(rand_key)
                 break
             else:
                 if jokers > 0:

@@ -1,6 +1,8 @@
 from colorama import Fore, Style
 import graphics
 import leaderboard
+import os
+
 
 def check_answer(user_answer, correct_answer, jokers, money, round, game_ended, player_name):
     if user_answer == correct_answer:
@@ -9,6 +11,8 @@ def check_answer(user_answer, correct_answer, jokers, money, round, game_ended, 
         round += 1
         print(Fore.GREEN + f"So far you've earned ${money:,}!" + Style.RESET_ALL)
 
+        input('Press enter to continue')
+
         if round == 10:
             game_ended = True
 
@@ -16,13 +20,21 @@ def check_answer(user_answer, correct_answer, jokers, money, round, game_ended, 
         print(Fore.BLUE + "Question skipped." + Style.RESET_ALL)
         jokers -= 1
 
+        input('Press enter to continue')
+
     else:
+        os.system("clear")
         print(Fore.RED + "Wrong! That was incorrect." + Style.RESET_ALL)
         print(graphics.game_over())
         game_ended = True
-        # TODO: SHOW LEADERBOARD
         leaderboard.update_leaderboard(player_name, 0)
+
+        input("Press enter to see leaderboard")
+        os.system("clear")
+
         leaderboard.display_leaderboard()
+
+        input('Press enter to end')
 
     return jokers, money, round, game_ended
 

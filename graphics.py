@@ -1,5 +1,8 @@
 from colorama import Fore, Back, Style, init
+import os
 
+def clear_screen():
+    os.system('clear')
 
 def game_splash():
     splash = fr"""
@@ -23,17 +26,23 @@ def game_splash():
         ||\\$//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\$//||
         ||====================================================================||
     {Fore.RED}--------------------------------------------------------------------------------
-           {Fore.GREEN}ARE YOU READY TO BECOME THE NEXT BILLIONAIRE? PRESS ENTER TO START!{Style.RESET_ALL}    
+                    {Fore.GREEN}ARE YOU READY TO BECOME THE NEXT BILLIONAIRE?
+                                PRESS ENTER TO START!{Style.RESET_ALL}    
     {Fore.RED}--------------------------------------------------------------------------------{Style.RESET_ALL} 
     """
 
     # Game rules text
-    game_rules = ("\t- The game consists of 10 rounds, each with 3 different categories.\n"
+    game_rules = ("\n\n\n\t- The game consists of 10 rounds, with 3 randomly selected question categories.\n"
+                  "\t- The categories are: Geography, Periodic Table of Elements, Golden Globe Winners.\n"
                   "\t- In each round, the player will be asked a question with 4 possible answers,\n"
                   "\t  of which only one is correct.\n"
-                  "\t- After each correct answer, the player will earn some $$$.\n"
-                  "\t- The player has the option to skip a question twice (2 jokers).\n"
-                  "\t- Once the player answers all 10 questions correctly, they win the game.\n")
+                  "\t- For each correct answer, the player achieves 1 million.\n"
+                  "\t- If the player doesn't know the answer, they can skip a question twice (2 jokers).\n"
+                  "\t- If the player answers all 10 questions correctly and has used jokers, \n"
+                  "\t  they win the accumulated amount.\n"
+                  "\t- If the player answers all 10 questions correctly without using any jokers,\n"
+                  "\t  they win the full billion and become a member of the Billionaires Club.\n"
+                  "\t- If the player answers a question incorrectly, the game is over and all the money is gone...\n")
 
     # Show splash screen first
     print(splash)
@@ -41,11 +50,14 @@ def game_splash():
     # Wait for user to press Enter to continue with game rules
     input("")
 
+    # Clean Screen
+    clear_screen()
+
     # After Enter is pressed, show the game rules
     print(game_rules)
 
     # After displaying the game rules, wait for the user to press Enter again to start
-    input("START PLAYING -- PRESS ENTER")
+    input("START PLAYING ?$? -- PRESS ENTER !!!")
 
     # Return True to indicate that the game is starting
     return True
@@ -134,7 +146,7 @@ def display_hangman(question_num):
     color = color_cycle[question_num % len(color_cycle)]
 
     # Return the hangman picture with the selected color
-    return color + hangman_pics[question_num] + Style.RESET_ALL
+    return color + hangman_pics[question_num] + "\n\tQUESTION: " + str(question_num+1) + "/10" +Style.RESET_ALL
 
 
 def game_over():
@@ -224,7 +236,10 @@ def win_as_billionaire():
     return Fore.GREEN + billion + Style.RESET_ALL
 
 # Testing the Splash
-# game_splash()
+#game_splash()
 
 # Testing Hangman
-# print(display_hangman(9))
+#print(display_hangman(9,12))
+
+# Test Billionaire
+# print(win_as_billionaire())
