@@ -7,9 +7,25 @@ import check_answer
 import graphics
 import random
 from colorama import Fore, Style
+from multiprocessing import Process, Manager
+
+
 
 NUMBER_OF_JOKERS = 2
 REQUIRED_CORRECT_ANSWERS = 10
+
+
+def generate_capitals_dict(shared_dict):
+    shared_dict["capitals"] = get_list_of_capitals_and_countries()
+
+
+def generate_elements_dict(shared_dict):
+    shared_dict["elements"] = get_elements()
+
+
+def generate_oscars_dict(shared_dict):
+    shared_dict["oscars"] = get_golden_globe_winners()
+
 
 def show_winner_screen(jokers, price, player_name):
     if jokers == NUMBER_OF_JOKERS:
@@ -35,17 +51,35 @@ def main():
     player_name = ""
 
     player_name = input("Please add your name: ").strip()
-    print(f"\nWelcome to the game, {player_name}!\n\nLet's start!\n\n")
+    print(f"\nWelcome to the game, {player_name}!\n\nLet's start!\n")
 
     print("#####################################")
     print("Loading list.")
     print("Please wait...")
-    capitals_dicts = get_list_of_capitals_and_countries()
-    elements_dict = get_elements()
-    oscars_dict = get_golden_globe_winners()
-    list_of_dicts = (capitals_dicts, elements_dict, oscars_dict)
+
+    with Manager() as manager:
+        shared_dict = manager.dict()
+
+        capitals_process = Process(target=generate_capitals_dict, args=(shared_dict,))
+        elements_process = Process(target=generate_elements_dict, args=(shared_dict,))
+        oscars_process = Process(target=generate_oscars_dict, args=(shared_dict,))
+
+        capitals_process.start()
+        elements_process.start()
+        oscars_process.start()
+
+        capitals_process.join()
+        elements_process.join()
+        oscars_process.join()
+
+        capitals_dicts = shared_dict["capitals"]
+        elements_dict = shared_dict["elements"]
+        oscars_dict = shared_dict["oscars"]
+
     print("Loaded!")
     print("#####################################")
+
+    list_of_dicts = (capitals_dicts, elements_dict, oscars_dict)
 
     asked_questions = []
 

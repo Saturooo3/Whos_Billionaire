@@ -3,9 +3,6 @@ from bs4 import BeautifulSoup
 
 
 def get_list_of_capitals_and_countries():
-    print("#####################################")
-    print("Loading list.")
-    print("Please wait...")
     article = wikipedia.page("List_of_national_capitals#List")
     soup = BeautifulSoup(article.html(), "html.parser")
 
@@ -50,6 +47,4 @@ def get_list_of_capitals_and_countries():
 
         city_country_pairs[f"{city_text}"] = f"{country_text}"
 
-    print("Loaded!")
-    print("#####################################")
     return city_country_pairs
