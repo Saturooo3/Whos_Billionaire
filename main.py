@@ -13,6 +13,8 @@ from multiprocessing import Process, Manager
 NUMBER_OF_JOKERS = 2
 REQUIRED_CORRECT_ANSWERS = 10
 
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 def generate_capitals_dict(shared_dict):
     shared_dict["capitals"] = get_list_of_capitals_and_countries()
@@ -89,6 +91,7 @@ def main():
     asked_questions = []
 
     while rounds_played <= REQUIRED_CORRECT_ANSWERS and not game_ended:
+        clear_screen()
         rand_dict = random.choice(list_of_dicts)
         rand_key, value_of_rand_key, answer_options = questions_provider.create_dict_for_answer_options(
             rand_dict, asked_questions, jokers)
