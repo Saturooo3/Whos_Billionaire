@@ -25,6 +25,8 @@ def check_answer(user_answer, correct_answer, jokers, money, round, game_ended, 
     else:
         os.system("clear")
         print(Fore.RED + "Wrong! That was incorrect." + Style.RESET_ALL)
+
+        print(f"The correct answer was: {correct_answer}")
         print(graphics.game_over())
         game_ended = True
         leaderboard.update_leaderboard(player_name, 0)
