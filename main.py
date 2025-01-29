@@ -1,7 +1,10 @@
-import questions_provider
-import capitals_scraper
+import question_provider
+from capitals_scraper import get_list_of_capitals_and_countries
+from oscars_scraper import get_golden_globe_winners
+from elements_scraper import get_elements
 import check_answer
 import graphics
+import random
 from colorama import Fore, Style
 
 
@@ -17,16 +20,27 @@ def main():
     round = 0
     game_ended = False
 
-    capital_of_country_dict = capitals_scraper.get_list_of_capitals_and_countries()
+
+    capitals_dicts = get_list_of_capitals_and_countries()
+    elements_dict = get_elements()
+    oscars_dict = get_golden_globe_winners()
+    list_of_dicts = (capitals_dicts, elements_dict, oscars_dict)
+
     asked_questions = []
 
     while round <= 10 and not game_ended:
-
-        rand_country, capital, answer_options = questions_provider.create_dict_for_answer_options(
-            capital_of_country_dict, asked_questions)
+        rand_dict = random.choice(list_of_dicts)
+        rand_key, value_of_rand_key, answer_options = question_provider.create_dict_for_answer_options(
+            rand_dict, asked_questions)
 
         print(graphics.display_hangman(round))
-        print(f"In what country is this city: {rand_country}?")
+
+        if rand_key in capitals_dicts:
+            print(f"Which country is {rand_key} the capital of?")
+        elif rand_key in elements_dict:
+            print(f"What element is {rand_key} ?")
+        elif rand_key in oscars_dict:
+            print(f"Who won the oscar in {rand_key}")
 
         for index, answer in answer_options.items():
             print(f"{index}: {answer}")
@@ -34,9 +48,10 @@ def main():
         while True:
             user_choice = input("\nEnter your answer (A, B, C, D, E): ").upper()
             if check_answer.is_user_choice_valid(user_choice):
-                jokers, price, round, game_ended = check_answer.check_answer(answer_options[user_choice], capital,
-                                                                             jokers, price, round, game_ended)
-                asked_questions.append(capital_of_country_dict[rand_country])
+                jokers, price, round, game_ended = check_answer.check_answer(answer_options[user_choice],
+                                                                             value_of_rand_key, jokers, price,
+                                                                             round, game_ended)
+                asked_questions.append(rand_dict[rand_key])
                 break
             else:
                 print(Fore.LIGHTYELLOW_EX + "\nValid choice: A, B, C ,D, E" + Style.RESET_ALL)
