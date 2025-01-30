@@ -130,7 +130,7 @@ def main():
                     print(Fore.LIGHTYELLOW_EX + "\nValid choice: A, B, C, D" + Style.RESET_ALL)
 
 
-    if round == REQUIRED_CORRECT_ANSWERS:
+    if rounds_played == REQUIRED_CORRECT_ANSWERS:
         show_winner_screen(jokers, price, player_name)
 
 

@@ -17,7 +17,7 @@ def check_answer(user_answer, correct_answer, jokers, money, round, game_ended, 
             game_ended = True
 
     elif user_answer == "SKIP" and jokers > 0:
-        print(Fore.BLUE + "Question skipped." + Style.RESET_ALL)
+        print(Fore.BLUE + "\nQuestion skipped." + Style.RESET_ALL)
         jokers -= 1
 
         input('Press enter to continue')
@@ -25,7 +25,6 @@ def check_answer(user_answer, correct_answer, jokers, money, round, game_ended, 
     else:
         os.system("clear")
         print(Fore.RED + "Wrong! That was incorrect." + Style.RESET_ALL)
-
         print(f"The correct answer was: {correct_answer}")
         print(graphics.game_over())
         game_ended = True
